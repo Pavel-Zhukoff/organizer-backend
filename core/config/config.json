@@ -11,20 +11,19 @@
     }
   },
   "db": {
-    "adapter": "pdo",
-    "postgresql": {},
+    "adapter": "mysqli",
     "mysqli": {
       "host": "localhost",
       "user": "root",
       "password": "",
-      "name": "site",
+      "name": "organizer",
       "port": 3306
     },
     "pdo": {
       "host": "localhost",
       "user": "root",
       "password": "",
-      "name": "site",
+      "name": "organizer",
       "charset": "utf8"
     }
   }

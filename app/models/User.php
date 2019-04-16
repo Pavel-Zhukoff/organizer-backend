@@ -1,7 +1,7 @@
 <?php
 
 
-namespace app\models;
+namespace App\Models;
 
 use Core\Classes\Database;
 
@@ -24,6 +24,13 @@ class User
         return Database::query("SELECT * FROM `user` WHERE `email` = '{$email}'");
     }
 
+    public function getUserByEmailAndPassword(string $email, string $password) : array
+    {
+        $email = Database::escape($email);
+        $password = md5($email.Database::escape($password).$email);
+        return Database::query("SELECT * FROM `user` WHERE `email` = '{$email}' AND `password` = '{$password}'");
+    }
+
     public function getUserBySession(string $session) : array
     {
         $session = Database::escape($session);
@@ -32,6 +39,15 @@ class User
 
     public function updateUser(array $user) : bool
     {
-        //
+        return Database::update('user', [
+            "login_time" => $user["login_time"],
+            "login_ip" => $user["login_ip"],
+            "session" => $user["session"]
+        ], ["user_id" => $user["user_id"]]);
+    }
+
+    public function insertUser(array $user) : bool
+    {
+        return Database::insert('user', $user);
     }
 }

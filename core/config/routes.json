@@ -1,17 +1,47 @@
 {
-  "userNew": {
+  "user": {
     "route": "/user",
     "controller": "User/index",
-    "args": false
+    "args": true
+  },
+  "userNew": {
+    "route": "/user/new",
+    "controller": "User/new",
+    "args": true
   },
   "userLogin": {
-  "route": "/user/login",
-  "controller": "User/login",
-  "args": true
+    "route": "/user/login",
+    "controller": "User/login",
+    "args": true
+  },
+  "userLogout": {
+    "route": "/user/logout",
+    "controller": "User/logout",
+    "args": true
+  },
+  "note": {
+    "route": "/note",
+    "controller": "Note/index",
+    "args": true
+  },
+  "noteNew": {
+    "route": "/note/new",
+    "controller": "Note/new",
+    "args": true
+  },
+  "noteDelete": {
+    "route": "/note/login",
+    "controller": "Note/delete",
+    "args": true
+  },
+  "noteUpdate": {
+    "route": "/note/logout",
+    "controller": "Note/update",
+    "args": true
   },
   "404": {
-  "route": "/404",
-  "controller": "Error/pageNotFound",
-  "args": false
+    "route": "/404",
+    "controller": "Error/pageNotFound",
+    "args": false
   }
 }

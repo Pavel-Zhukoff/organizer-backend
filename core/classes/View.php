@@ -17,6 +17,8 @@ class View
     private $twigLoader;
     private $twigEnv;
 
+    private $response;
+
     public $renderedView;
 
     function __construct()
@@ -24,6 +26,8 @@ class View
         $this->viewConfig = Config::load('config')['view'];
         $this->twigLoader = new \Twig_Loader_Filesystem($this->viewConfig['path']);
         $this->twigEnv = new \Twig_Environment($this->twigLoader, $this->viewConfig['twig']);
+
+        $this->response = new Response();
     }
 
     public function render(string $view, array $data = array()) : void
@@ -36,7 +40,7 @@ class View
 
     public function display() : void
     {
-        Response::display($this->renderedView);
+        $this->response->display($this->renderedView);
     }
 
     public function getView() : string

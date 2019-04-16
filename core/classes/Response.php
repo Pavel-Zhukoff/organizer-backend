@@ -11,20 +11,20 @@ namespace Core\Classes;
 
 class Response
 {
-    private static $headers = array();
-    private static $level = 0;
+    private $headers = array();
+    private $level = 0;
 
-    public static function addHeader(string $header) : void
+    public function addHeader(string $header) : void
     {
-        self::$headers[] = $header;
+        $this->headers[] = $header;
     }
 
-    public static function setCompression(int $level) : void
+    public function setCompression(int $level) : void
     {
-        self::$level = $level;
+        $this->level = $level;
     }
 
-    public static function compress(string $data, int $level = 0) : string
+    public function compress(string $data, int $level = 0) : string
     {
         if (isset($_SERVER['HTTP_ACCEPT_ENCODING'])
                 && (strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') !== false)) {
@@ -52,17 +52,17 @@ class Response
             return $data;
         }
 
-        self::addHeader('Content-Encoding: ' . $encoding);
+        $this->addHeader('Content-Encoding: ' . $encoding);
 
         return gzencode($data, (int)$level);
     }
 
-    public static function display(string $data) : void
+    public function display(string $data) : void
     {
-        $data = self::$level ? self::compress($data, self::$level) : $data;
+        $data = $this->level ? $this->compress($data, $this->level) : $data;
 
         if (!headers_sent()) {
-            foreach (self::$headers as $header) {
+            foreach ($this->headers as $header) {
                 header($header, true);
             }
         }
