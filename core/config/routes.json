@@ -1,0 +1,17 @@
+{
+  "userNew": {
+    "route": "/user",
+    "controller": "User/index",
+    "args": false
+  },
+  "userLogin": {
+  "route": "/user/login",
+  "controller": "User/login",
+  "args": true
+  },
+  "404": {
+  "route": "/404",
+  "controller": "Error/pageNotFound",
+  "args": false
+  }
+}

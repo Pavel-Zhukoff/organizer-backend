@@ -1,0 +1,25 @@
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L]
+Options All -Indexes
+<FilesMatch ".(htaccess|htpasswd|ini|json|twig)$">
+ Order Allow,Deny
+ Deny from all
+ </FilesMatch>
+ <ifModule mod_expires.c>
+ ExpiresActive On
+ ExpiresDefault "access plus 1 month"
+ ExpiresByType text/html "access plus 1 month 15 days 2 hours"
+ ExpiresByType image/jpg "access plus 5 hours 3 minutes"
+ ExpiresByType image/x-icon "access plus 2592000 seconds"
+ </ifModule>
+ <ifModule mod_deflate.c>
+ AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/x-javascript
+ </ifModule>
+
+#AuthType Basic
+#AuthName "Password Protected Area"
+#AuthUserFile /var/www/archinheim/.htpasswd
+#Require valid-user

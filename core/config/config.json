@@ -1,0 +1,31 @@
+{
+  "controllers": {
+    "namespace": "App\\Controller\\",
+    "path": "app/controller/"
+  },
+  "view" : {
+    "path": "app/views",
+    "twig": {
+      "cache": "cache/",
+      "autoescape": false
+    }
+  },
+  "db": {
+    "adapter": "pdo",
+    "postgresql": {},
+    "mysqli": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "name": "site",
+      "port": 3306
+    },
+    "pdo": {
+      "host": "localhost",
+      "user": "root",
+      "password": "",
+      "name": "site",
+      "charset": "utf8"
+    }
+  }
+}
