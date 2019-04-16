@@ -27,20 +27,14 @@ class PdoAdapter extends Adapter
         unset($this->connection);
     }
 
-    public function query(string $query): array
+    public function query(string $query) : array
     {
         $answer = array();
-        $result = (strpos($query, "INSERT") === strpos($query, "UPDATE"))?
-        $this->connection->query($query):$this->connection->exec($query);
+        $result = $this->connection->query($query);
         if ($result instanceof \PDOStatement) {
             $answer = array(
                 'num_rows' => $result->num_rows,
                 'rows' => $result->fetchAll()
-            );
-        }
-        elseif ($result !== false) {
-            $answer = array(
-                'insert_id' =>  $this->connection->lastInsertId()
             );
         }
         else {
@@ -51,13 +45,23 @@ class PdoAdapter extends Adapter
         return $answer;
     }
 
-    public function escape(string $str): string
+    public function escape(string $str) : string
     {
         return $this->connection->quote($str);
     }
 
-    public function insert_id(): integer
+    public function insert_id() : int
     {
         return intval($this->connection->lastInsertId());
+    }
+
+    public function insert(string $table, array $data) : bool
+    {
+        // TODO: Implement insert() method.
+    }
+
+    public function update(string $table, array $data, array $where) : bool
+    {
+        // TODO: Implement update() method.
     }
 }

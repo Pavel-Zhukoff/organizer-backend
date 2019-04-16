@@ -7,7 +7,7 @@
  */
 
 namespace Core\Classes;
-
+// TODO: Сделать ORM модели
 
 class Model
 {

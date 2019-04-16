@@ -19,7 +19,11 @@ abstract class Adapter
 
     abstract public function query(string $query) : array;
 
+    abstract public function insert(string $table, array $data) : bool;
+
+    abstract public function update(string $table, array $data, array $where) : bool;
+
     abstract public function escape(string $str) : string;
 
-    abstract public function insert_id() : integer;
+    abstract public function insert_id() : int;
 }

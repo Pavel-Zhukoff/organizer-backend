@@ -46,9 +46,7 @@ class MysqliAdapter extends Adapter
                 $result->free();
             }
             else {
-                $answer = array(
-                    "insert_id" =>  $this->connection->insert_id
-                );
+                throw new \Exception("Ошибка выполнения запроса!");
             }
         }
         else {
@@ -64,8 +62,64 @@ class MysqliAdapter extends Adapter
         return $this->connection->real_escape_string($str);
     }
 
-    public function insert_id() : integer
+    public function insert_id() : int
     {
         return intval($this->connection->insert_id);
+    }
+
+    public function insert(string $table, array $data) : bool
+    {
+        $table = strtolower($this->escape($table));
+        $attrs = array();
+        $values = array();
+        foreach ($data as $key => $value) {
+            $key = strtolower($this->escape($key));
+            $value = $this->escape($value);
+            $attrs[] = '`'.$key.'`';
+            $values[] = '"'.$value.'"';
+        }
+        $fields = implode(', ',$attrs);
+        $values = implode(', ',$values);
+        $query = "INSERT INTO {$table} ({$fields}) VALUES ({$values})";
+        $result = $this->connection->query($query);
+        if ($result !== false) {
+            return true;
+        }
+        else {
+            throw new \Exception("Ошибка выполнения запроса[{$this->connection->errno}]:".
+                " {$this->connection->error}");
+        }
+    }
+
+    public function update(string $table, array $data, array $where) : bool
+    {
+        $table = strtolower($this->escape($table));
+        $values = array();
+        $where_query = array();
+        $query = "UPDATE {$table} SET ";
+        foreach ($data as $key => $value) {
+            $key = strtolower($this->escape($key));
+            $value = $this->escape($value);
+            $values[] = '`'.$key.'` = "'.$value.'"';
+        }
+        $query .= implode(', ', $values).' WHERE ';
+        foreach ($where as $key => $value) {
+            $key = strtolower($this->escape($key));
+            $value = $this->escape($value);
+            $where_query[] = '`'.$key.'` = "'.$value.'"';
+        }
+        if (count($where_query) > 1) {
+            $query .= implode(' AND ', $where_query);
+        } else {
+            $query .= $where_query[0];
+        }
+        $result = $this->connection->query($query);
+        if ($result !== false) {
+            return true;
+        }
+        else {
+            throw new \Exception("Ошибка выполнения запроса[{$this->connection->errno}]:".
+                " {$this->connection->error}");
+        }
     }
 }

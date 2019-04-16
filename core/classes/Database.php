@@ -54,4 +54,14 @@ class Database
     {
         return self::$dbAdapter->insert_id();
     }
+
+    public static function insert(string $table, array $data) : bool
+    {
+        return self::$dbAdapter->insert($table, $data);
+    }
+
+    public static function update(string $table, array $data, array $where) : bool
+    {
+        return self::$dbAdapter->update($table, $data, $where);
+    }
 }
