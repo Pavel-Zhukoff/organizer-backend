@@ -19,11 +19,6 @@ class Request
 
     public function __construct()
     {
-        $this->response = new Response();
-        $this->response->addHeader('Content-Type: application/json');
-        $this->response->addHeader('Access-Control-Allow-Headers: *');
-        $this->response->addHeader('Access-Control-Allow-Origin: *');
-        $this->response->addHeader('Access-Control-Allow-Methods: *');
         if (!isset($_REQUEST)) {
             throw new \Exception("Отсутствует POST или GET запрос!");
         }
@@ -52,9 +47,9 @@ class Request
             'files'  => isset($_FILES)?$_FILES:null,
             'data'   => array()
         );
-        $buf = json_decode(array_keys($_REQUEST)[0], true);
+        $buf = json_decode(file_get_contents('php://input'), true);
         foreach ($buf as $key => $value)
-            $this->data['data'][strtolower($key)] = trim($value);
+           $this->data['data'][strtolower($key)] = trim($value);
 
     }
 
