@@ -39,11 +39,11 @@ class User extends Controller
                     $this->response->display(json_encode(["answer" => $user['rows'], "code" => "200"]));
                 }
                 else {
-                    $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "400"]));
+                    $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "404"]));
                 }
             }
             else {
-                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "400"]));
+                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "401"]));
             }
         }
         else {
@@ -72,15 +72,15 @@ class User extends Controller
                             "code" => "200"]));
                     }
                     else {
-                        $this->response->display(json_encode(["answer" => "Что-то пошло не так!","code" => "400"]));
+                        $this->response->display(json_encode(["answer" => "Что-то пошло не так!","code" => "500"]));
                     }
                 }
                 else {
-                    $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "400"]));
+                    $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "404"]));
                 }
             }
             else {
-                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "400"]));
+                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "401"]));
             }
         }
         else {
@@ -100,15 +100,15 @@ class User extends Controller
                         $this->response->display(json_encode(["answer" => "Вы вышли!","code" => "200"]));
                     }
                     else {
-                        $this->response->display(json_encode(["answer" => "Что-то пошло не так!","code" => "400"]));
+                        $this->response->display(json_encode(["answer" => "Что-то пошло не так!","code" => "500"]));
                     }
                 }
                 else {
-                    $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "400"]));
+                    $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "404"]));
                 }
             }
             else {
-                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "403"]));
+                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "401"]));
             }
         }
         else {
@@ -137,21 +137,19 @@ class User extends Controller
                             "code" => "200"]));
                     }
                     else {
-                        $this->response->display(json_encode(["answer" => "Что-то пошло не так!","code" => "400"]));
+                        $this->response->display(json_encode(["answer" => "Что-то пошло не так!", "code" => "403"]));
                     }
                 }
                 else {
-                    $this->response->display(json_encode(["answer" => "Электронная почта уже используется!","code" => "400"]));
+                    $this->response->display(json_encode(["answer" => "Электронная почта уже используется!", "code" => "402"]));
                 }
             }
             else {
-                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!",
-                    "request_data" => $data['data'],
-                    "code" => "400"]));
+                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!", "code" => "401"]));
             }
         }
         else {
-            $this->response->display(json_encode(["answer" => "Получен неверный ответ!","code" => "400"]));
+            $this->response->display(json_encode(["answer" => "Получен неверный ответ!", "code" => "400"]));
         }
     }
 
