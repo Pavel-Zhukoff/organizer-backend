@@ -15,26 +15,66 @@ class User
     public function getUserById(string $id) : array
     {
         $id = Database::escape($id);
-        return Database::query("SELECT * FROM `user` WHERE `user_id` = {$id}");
+        $user = Database::query("SELECT * FROM `user` WHERE `user_id` = {$id}");
+        $data = array();
+        if ($user['num_rows'] != 0) {
+            $data = array(
+                'email' => $user['data']['email'],
+                'name' => $user['data']['name'],
+                'session' => $user['data']['session'],
+                'user_id' => $user['data']['user_id'],
+            );
+        }
+        return $data;
     }
 
     public function getUserByEmail(string $email) : array
     {
         $email = Database::escape($email);
-        return Database::query("SELECT * FROM `user` WHERE `email` = '{$email}'");
+        $user = Database::query("SELECT * FROM `user` WHERE `email` = '{$email}'");
+        $data = array();
+        if ($user['num_rows'] != 0) {
+            $data = array(
+                'email' => $user['data']['email'],
+                'name' => $user['data']['name'],
+                'session' => $user['data']['session'],
+                'user_id' => $user['data']['user_id'],
+            );
+        }
+        return $data;
     }
 
     public function getUserByEmailAndPassword(string $email, string $password) : array
     {
         $email = Database::escape($email);
         $password = md5($email.Database::escape($password).$email);
-        return Database::query("SELECT * FROM `user` WHERE `email` = '{$email}' AND `password` = '{$password}'");
+        $user = Database::query("SELECT * FROM `user` WHERE `email` = '{$email}' AND `password` = '{$password}'");
+        $data = array();
+        if ($user['num_rows'] != 0) {
+            $data = array(
+                'email' => $user['data']['email'],
+                'name' => $user['data']['name'],
+                'session' => $user['data']['session'],
+                'user_id' => $user['data']['user_id'],
+            );
+        }
+        return $data;
     }
 
     public function getUserBySession(string $session) : array
     {
         $session = Database::escape($session);
-        return Database::query("SELECT * FROM `user` WHERE `session` = '{$session}'");
+        $user = Database::query("SELECT * FROM `user` WHERE `session` = '{$session}'");
+        $data = array();
+        if ($user['num_rows'] != 0) {
+            $data = array(
+                'email' => $user['data']['email'],
+                'name' => $user['data']['name'],
+                'session' => $user['data']['session'],
+                'user_id' => $user['data']['user_id'],
+            );
+        }
+        return $data;
     }
 
     public function updateUser(array $user) : bool
