@@ -8,9 +8,6 @@
 
 namespace Core\Classes;
 
-
-use function PHPSTORM_META\type;
-
 class Request
 {
     private $data;
@@ -24,15 +21,6 @@ class Request
         }
         $this->prepareData();
         $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
-        if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
-            if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
-                $this->method = 'DELETE';
-            } else if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'PUT') {
-                $this->method = 'PUT';
-            } else {
-                throw new \Exception("Неожиданный метод запроса!");
-            }
-        }
         unset($_REQUEST, $_GET, $_POST);
     }
 
@@ -47,7 +35,7 @@ class Request
             'files'  => isset($_FILES)?$_FILES:null,
             'data'   => array()
         );
-        $buf = json_decode(file_get_contents('php://input'), true);
+        $buf = json_decode(file_get_contents('php://input', 'r'), true);
         foreach ($buf as $key => $value)
            $this->data['data'][strtolower($key)] = trim($value);
 

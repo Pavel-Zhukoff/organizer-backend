@@ -32,7 +32,7 @@ class User extends Controller
     public function index(Request $request)
     {
         $data = $request->getData();
-        if($request->getMethod() == "GET") {
+        if($request->getMethod() == "POST") {
             if (isset($data['data']['session']) && !empty($data['data']['session'])) {
                 $user = $this->userModel->getUserBySession($data['data']['session']);
                 if ($user['num_rows'] != 0) {
@@ -54,22 +54,28 @@ class User extends Controller
     public function login(Request $request)
     {
         $data = $request->getData();
-        if($request->getMethod() == "PUT") {
+        if($request->getMethod() == "POST") {
             if (isset($data['data']['email']) && !empty($data['data']['email']) &&
                     isset($data['data']['password']) && !empty($data['data']['password'])) {
                 $user = $this->userModel->getUserByEmailAndPassword(strtolower($data['data']['email']),
                                             $data['data']['passwords']);
                 if ($user['num_rows'] > 0) {
-                    $user['rows']['login_time'] = time();
-                    $user['rows']['login_ip'] = $_SERVER["REMOTE_ADDR"];
-                    $user['rows']['session'] = md5($user['rows']['login_time'].
-                            $user['rows']['login_ip'].
-                            $user['rows']['email'].
-                            $user['rows']['password']);
-                    if ($this->userModel->updateUser($user['rows'])) {
+                    $user['rows'][0]['login_time'] = time();
+                    $user['rows'][0]['login_ip'] = $_SERVER["REMOTE_ADDR"];
+                    $user['rows'][0]['session'] = md5($user['rows'][0]['login_time'].
+                            $user['rows'][0]['login_ip'].
+                            $user['rows'][0]['email'].
+                            $user['rows'][0]['password']);
+                    if ($this->userModel->updateUser($user['rows'][0])) {
+                        $user = $this->userModel->getUserById($user['rows'][0]['user_id']);
                         $this->response->display(json_encode(["answer" => "Вы зарегистрировались!",
-                            "data" => $this->userModel->getUserById($user['rows']['user_id'])['rows'],
-                            "code" => "200"]));
+                            "data" => array(
+                            'email'    => $user['rows'][0]['email'],
+                            'name'     => $user['rows'][0]['name'],
+                            'session'  => $user['rows'][0]['session'],
+                            'user_id'  => $user['rows'][0]['user_id'],
+                            'num_rows' => $user['num_rows'],
+                        ), "code" => "200"]));
                     }
                     else {
                         $this->response->display(json_encode(["answer" => "Что-то пошло не так!","code" => "500"]));
@@ -91,12 +97,12 @@ class User extends Controller
     public function logout(Request $request)
     {
         $data = $request->getData();
-        if($request->getMethod() == "PUT") {
+        if($request->getMethod() == "POST") {
             if (isset($data['data']['session']) && !empty($data['data']['session'])) {
                 $user = $this->userModel->getUserBySession($data['data']['session']);
                 if ($user['num_rows'] != 0) {
-                    $user['rows']['session'] = 'false';
-                    if ($this->userModel->updateUser($user['rows'])) {
+                    $user['rows'][0]['session'] = '';
+                    if ($this->userModel->updateUser($user['rows'][0])) {
                         $this->response->display(json_encode(["answer" => "Вы вышли!","code" => "200"]));
                     }
                     else {
@@ -132,8 +138,15 @@ class User extends Controller
                     $user['login_ip'] = $_SERVER["REMOTE_ADDR"];
                     $user['session'] = md5($user['login_time'].$user['login_ip'].$user['email'].$user['password']);
                     if ($this->userModel->insertUser($user)) {
+                        $user = $this->userModel->getUserByEmail($user['email']);
                         $this->response->display(json_encode(["answer" => "Вы зарегистрировались!",
-                            "data" => $this->userModel->getUserByEmail($user['email']),
+                            "data" => array(
+                                'email'    => $user['rows'][0]['email'],
+                                'name'     => $user['rows'][0]['name'],
+                                'session'  => $user['rows'][0]['session'],
+                                'user_id'  => $user['rows'][0]['user_id'],
+                                'num_rows' => $user['num_rows'],
+                            ),
                             "code" => "200"]));
                     }
                     else {
