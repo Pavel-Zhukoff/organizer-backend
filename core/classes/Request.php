@@ -9,19 +9,35 @@
 namespace Core\Classes;
 
 
+use function PHPSTORM_META\type;
+
 class Request
 {
     private $data;
-    private $validData;
+
+    private $method;
 
     public function __construct()
     {
-
+        $this->response = new Response();
+        $this->response->addHeader('Content-Type: application/json');
+        $this->response->addHeader('Access-Control-Allow-Headers: *');
+        $this->response->addHeader('Access-Control-Allow-Origin: *');
+        $this->response->addHeader('Access-Control-Allow-Methods: *');
         if (!isset($_REQUEST)) {
             throw new \Exception("Отсутствует POST или GET запрос!");
         }
         $this->prepareData();
-        $this->validateData();
+        $this->method = strtoupper($_SERVER['REQUEST_METHOD']);
+        if ($this->method == 'POST' && array_key_exists('HTTP_X_HTTP_METHOD', $_SERVER)) {
+            if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'DELETE') {
+                $this->method = 'DELETE';
+            } else if ($_SERVER['HTTP_X_HTTP_METHOD'] == 'PUT') {
+                $this->method = 'PUT';
+            } else {
+                throw new \Exception("Неожиданный метод запроса!");
+            }
+        }
         unset($_REQUEST, $_GET, $_POST);
     }
 
@@ -33,35 +49,23 @@ class Request
     private function prepareData()
     {
         $this->data = array(
-            'method' => strtolower($_SERVER['REQUEST_METHOD']),
-            'files'  => isset($_FILES)?$_FILES:null
+            'files'  => isset($_FILES)?$_FILES:null,
+            'data'   => array()
         );
-        $buf = $_REQUEST;
+        $buf = json_decode(array_keys($_REQUEST)[0], true);
         foreach ($buf as $key => $value)
-            $this->data['data'][strtolower($key)] = trim($buf[$key]);
-    }
-    
-    private function validateData()
-    {
-        $this->validData = array(
-            'method' => strtolower($_SERVER['REQUEST_METHOD']),
-            'files'  => isset($_FILES)?$_FILES:null
-        );
-        $buf = $_REQUEST;
-        foreach ($buf as $key => $value)
-            $this->validData['data'][strtolower($key)] = filter_var(trim($buf[$key]), FILTER_SANITIZE_STRING);
-    }
-    
-    public function getRawData() : array
-    {
-        return $this->data;
+            $this->data['data'][strtolower($key)] = trim($value);
+
     }
 
     public function getData() : array
     {
-        return $this->validData;
+        return $this->data;
     }
-    
 
-    
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
+
 }

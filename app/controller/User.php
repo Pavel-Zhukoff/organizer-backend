@@ -23,13 +23,16 @@ class User extends Controller
     {
         $this->response = new Response();
         $this->response->addHeader('Content-Type: application/json');
+        $this->response->addHeader('Access-Control-Allow-Headers: *');
+        $this->response->addHeader('Access-Control-Allow-Origin: *');
+        $this->response->addHeader('Access-Control-Allow-Methods: *');
         $this->userModel = new \App\Models\User();
     }
 
     public function index(Request $request)
     {
         $data = $request->getData();
-        if($data['method'] == "post") {
+        if($request->getMethod() == "GET") {
             if (isset($data['data']['session']) && !empty($data['data']['session'])) {
                 $user = $this->userModel->getUserBySession($data['data']['session']);
                 if ($user['num_rows'] != 0) {
@@ -51,7 +54,7 @@ class User extends Controller
     public function login(Request $request)
     {
         $data = $request->getData();
-        if($data['method'] == "post") {
+        if($request->getMethod() == "PUT") {
             if (isset($data['data']['email']) && !empty($data['data']['email']) &&
                     isset($data['data']['password']) && !empty($data['data']['password'])) {
                 $user = $this->userModel->getUserByEmailAndPassword(strtolower($data['data']['email']),
@@ -88,7 +91,7 @@ class User extends Controller
     public function logout(Request $request)
     {
         $data = $request->getData();
-        if($data['method'] == "post") {
+        if($request->getMethod() == "PUT") {
             if (isset($data['data']['session']) && !empty($data['data']['session'])) {
                 $user = $this->userModel->getUserBySession($data['data']['session']);
                 if ($user['num_rows'] != 0) {
@@ -116,9 +119,8 @@ class User extends Controller
     public function new(Request $request)
     {
         $data = $request->getData();
-        if($data['method'] == "post") {
-            if (isset($data['data']['email']) && !empty($data['data']['email']) &&
-                isset($data['data']['password']) && !empty($data['data']['password'])) {
+        if($request->getMethod() == "POST") {
+            if (isset($data['data']['email']) && isset($data['data']['password'])) {
                 $user = $this->userModel->getUserByEmail(strtolower($data['data']['email']));
                 if ($user['num_rows'] == 0) {
                     $user = array();
@@ -143,7 +145,9 @@ class User extends Controller
                 }
             }
             else {
-                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!","code" => "400"]));
+                $this->response->display(json_encode(["answer" => "Недостаточно аргументов!",
+                    "request_data" => $data['data'],
+                    "code" => "400"]));
             }
         }
         else {
