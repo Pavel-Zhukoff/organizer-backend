@@ -36,7 +36,13 @@ class User extends Controller
             if (isset($data['data']['session']) && !empty($data['data']['session'])) {
                 $user = $this->userModel->getUserBySession($data['data']['session']);
                 if ($user['num_rows'] != 0) {
-                    $this->response->display(json_encode(["answer" => $user['rows'], "code" => "200"]));
+                    $this->response->display(json_encode(["answer" => array(
+                        'email'    => $user['rows'][0]['email'],
+                        'name'     => $user['rows'][0]['name'],
+                        'session'  => $user['rows'][0]['session'],
+                        'user_id'  => $user['rows'][0]['user_id'],
+                        'num_rows' => $user['num_rows'],
+                    ), "code" => "200"]));
                 }
                 else {
                     $this->response->display(json_encode(["answer" => "Пользователь не найден!","code" => "404"]));
@@ -58,7 +64,7 @@ class User extends Controller
             if (isset($data['data']['email']) && !empty($data['data']['email']) &&
                     isset($data['data']['password']) && !empty($data['data']['password'])) {
                 $user = $this->userModel->getUserByEmailAndPassword(strtolower($data['data']['email']),
-                                            $data['data']['passwords']);
+                                            $data['data']['password']);
                 if ($user['num_rows'] > 0) {
                     $user['rows'][0]['login_time'] = time();
                     $user['rows'][0]['login_ip'] = $_SERVER["REMOTE_ADDR"];
@@ -68,7 +74,7 @@ class User extends Controller
                             $user['rows'][0]['password']);
                     if ($this->userModel->updateUser($user['rows'][0])) {
                         $user = $this->userModel->getUserById($user['rows'][0]['user_id']);
-                        $this->response->display(json_encode(["answer" => "Вы зарегистрировались!",
+                        $this->response->display(json_encode(["answer" => "Вы вошли!",
                             "data" => array(
                             'email'    => $user['rows'][0]['email'],
                             'name'     => $user['rows'][0]['name'],
