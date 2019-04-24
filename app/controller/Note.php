@@ -78,6 +78,7 @@ class Note extends Controller
     public function delete(Request $request)
     {
         $data = $request->getData();
+        //throw new \Exception(json_encode($data));
         if($request->getMethod() == "POST") {
             if (isset($data['data']['id']) && !empty($data['data']['id'])) {
                 if ($this->noteModel->deleteNote($data['data']['id'])) {

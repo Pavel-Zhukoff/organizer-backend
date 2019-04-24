@@ -30,12 +30,12 @@
     "args": true
   },
   "noteDelete": {
-    "route": "/note/login",
+    "route": "/note/delete",
     "controller": "Note/delete",
     "args": true
   },
   "noteUpdate": {
-    "route": "/note/logout",
+    "route": "/note/update",
     "controller": "Note/update",
     "args": true
   },
