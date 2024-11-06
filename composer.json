@@ -10,6 +10,6 @@
     }
   ],
   "require": {
-    "twig/twig": "2.x-dev"
+    "twig/twig": "3.11.2"
   }
 }
